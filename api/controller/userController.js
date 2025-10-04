@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 //signup
 exports.signup = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10, (err, hash) => {
+  bcrypt.hash(req.body.password, 10, async (err, hash) => {
     if (err) return res.status(500).json({ error: err });
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
@@ -14,10 +14,17 @@ exports.signup = (req, res, next) => {
       username: req.body.username,
       password: hash,
     });
-    user
+    await user
       .save()
       .then((user) => res.status(201).json({ message: "User created", user }))
-      .catch((err) => res.status(500).json({ error: err }));
+      .catch((err) => {
+        if (err.code === 11000) {
+          return res
+            .status(400)
+            .json({ message: "Email or username already exists" });
+        }
+        return res.status(500).json({ message: "Something went wrong" });
+      });
   });
 };
 
