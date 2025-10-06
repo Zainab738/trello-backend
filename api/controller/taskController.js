@@ -33,9 +33,13 @@ exports.deleteTask = async (req, res, next) => {
 //update
 exports.updateTask = async (req, res, next) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, {
-      $set: req.body,
-    });
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
     res.status(200).json({ message: "updated", task: task });
   } catch (err) {
     res.status(500).json({ message: "error", error: err });
@@ -48,7 +52,7 @@ exports.getTask = async (req, res, next) => {
   try {
     const task = await Task.find({ project: req.params.project });
     if (!task || task.length === 0) {
-      return res.status(404).json({ message: "coulndt find it " });
+      return res.status(404).json({ message: "no tasks yet" });
     }
     res.status(200).json({ message: "task fetched successfully", task });
   } catch (err) {
