@@ -27,4 +27,6 @@ router.patch(
   validation(validateTask),
   taskControllers.updateTask
 );
+// updatestatus
+router.patch("/update-status/:id", checkAuth, taskControllers.updateStatus);
 module.exports = router;

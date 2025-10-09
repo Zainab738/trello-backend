@@ -60,3 +60,28 @@ exports.getTask = async (req, res, next) => {
     console.log(err);
   }
 };
+// update status
+
+exports.updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
+
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      { $set: { status } },
+      { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json({ message: "Status updated successfully", task });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err });
+  }
+};
