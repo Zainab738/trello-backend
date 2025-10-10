@@ -47,19 +47,22 @@ exports.updateTask = async (req, res, next) => {
   }
 };
 
-//get
+// get
 exports.getTask = async (req, res, next) => {
   try {
     const task = await Task.find({ project: req.params.project });
+
     if (!task || task.length === 0) {
-      return res.status(404).json({ message: "no tasks yet" });
+      return res.status(200).json({ message: "No tasks yet", task: [] });
     }
-    res.status(200).json({ message: "task fetched successfully", task });
+
+    res.status(200).json({ message: "Tasks fetched successfully", task });
   } catch (err) {
-    res.status(500).json({ message: "error", error: err });
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: "Error fetching tasks", error: err });
   }
 };
+
 // update status
 
 exports.updateStatus = async (req, res) => {
