@@ -25,7 +25,7 @@ exports.getProject = async (req, res, next) => {
   try {
     const project = await Project.find({ user: req.userData.userid });
     if (!project || project.length === 0) {
-      return res.status(404).json({ message: "coulndt find it " });
+      return res.status(200).json({ message: "no projects yet " });
     }
     res.status(200).json({ message: "Project fetched successfully", project });
   } catch (err) {
