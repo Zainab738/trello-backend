@@ -48,7 +48,7 @@ exports.login = (req, res, next) => {
           process.env.JWT_KEY,
           { expiresIn: "1h" }
         );
-        res.status(200).json({ message: "auth success", token });
+        res.status(200).json({ message: "login success", token });
       });
     })
     .catch((err) => res.status(500).json({ error: err }));
