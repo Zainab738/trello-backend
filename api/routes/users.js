@@ -7,9 +7,17 @@ const mongoose = require("mongoose");
 const validateUser = require("../middleware/userSchemaValidation");
 const validation = require("../middleware/validation");
 const userController = require("../controller/userController");
+const upload = require("../../config/multercloudinary");
+const checkAuth = require("../middleware/checkAuth");
 
-router.post("/signup", validation(validateUser), userController.signup);
+router.post(
+  "/signup",
+  upload.single("profilePic"),
+  validation(validateUser),
+  userController.signup
+);
 
 router.post("/login", userController.login);
+router.get("/getUser", checkAuth, userController.getUser);
 
 module.exports = router;

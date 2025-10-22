@@ -13,7 +13,7 @@ exports.createProject = async (req, res, next) => {
   await project
     .save()
     .then(() => {
-      res.status(201).json({ message: "project created" });
+      res.status(201).json({ message: "project created", project: project });
     })
     .catch((err) => {
       res.status(500).json({ message: "error occured", error: err });
@@ -42,6 +42,23 @@ exports.deleteProject = async (req, res, next) => {
       return res.status(404).json({ message: "coulndt find it " });
     }
     res.status(200).json({ message: "Project deleted successfully", project });
+  } catch (err) {
+    res.status(500).json({ message: "error", error: err });
+    console.log(err);
+  }
+};
+//update
+exports.updateProject = async (req, res, next) => {
+  try {
+    const project = await Project.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "updated", project: project });
   } catch (err) {
     res.status(500).json({ message: "error", error: err });
     console.log(err);

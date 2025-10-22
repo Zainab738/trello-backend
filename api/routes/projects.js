@@ -20,4 +20,10 @@ router.delete(
   projectControllers.deleteProject
 );
 
+//update a proj
+router.patch(
+  "/update/:id",
+  validation(validateProject),
+  projectControllers.updateProject
+);
 module.exports = router;

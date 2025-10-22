@@ -13,6 +13,7 @@ exports.signup = (req, res, next) => {
       email: req.body.email,
       username: req.body.username,
       password: hash,
+      profilePic: req.file ? req.file.path : null,
     });
     await user
       .save()
@@ -44,7 +45,12 @@ exports.login = (req, res, next) => {
             .json({ message: "Wrong username or password" });
         }
         const token = jwt.sign(
-          { email: user.email, userid: user._id, username: user.username },
+          {
+            email: user.email,
+            userid: user._id,
+            username: user.username,
+            profilePic: user.profilePic || null,
+          },
           process.env.JWT_KEY,
           { expiresIn: "1h" }
         );
@@ -52,4 +58,16 @@ exports.login = (req, res, next) => {
       });
     })
     .catch((err) => res.status(500).json({ error: err }));
+};
+//get user
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.userData.userid).select(
+      "username email profilePic"
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
 };
