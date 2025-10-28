@@ -32,7 +32,7 @@ const sendLoginEmail = (toEmail, username, token) => {
 
   transport.sendMail(mailOptions, (error, info) => {
     if (error) console.error("Error:", error);
-    else console.log("Verification email sent :)");
+    else console.log("Verification email sent");
   });
 };
 
@@ -57,7 +57,7 @@ const VerifyPassword = (toEmail, username, token) => {
 
   transport.sendMail(mailOptions, (error, info) => {
     if (error) console.error("Error:", error);
-    else console.log("Password verification email sent :)");
+    else console.log("Password verification email sent");
   });
 };
 
