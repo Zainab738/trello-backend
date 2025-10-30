@@ -13,6 +13,7 @@ router.post(
 );
 
 router.get("/getprojects", checkAuth, projectControllers.getProject);
+router.get("/getoneproject/:id", checkAuth, projectControllers.getProjectById);
 
 router.delete(
   "/deleteprojects/:id",
