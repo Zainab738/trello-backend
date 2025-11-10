@@ -6,6 +6,7 @@ const validateUser = yup.object({
   username: yup.string().required().min(3),
   profilePic: yup
     .mixed()
+    .nullable()
     .test("is-valid-type", "Not a valid image type", function () {
       const file = this.options.context?.file;
       if (!file) return true;
