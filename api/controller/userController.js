@@ -5,17 +5,21 @@ const User = require("../models/users");
 const mongoose = require("mongoose");
 const { sendLoginEmail } = require("../../utils/index");
 const { VerifyPassword } = require("../../utils/index");
+const { generateUploadURL } = require("../../config/s3");
 
 // signup
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
+
+    const profilePicUrl = req.body.profilePic || null;
+
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
       username: req.body.username,
       password: hash,
-      profilePic: req.file ? req.file.path : null,
+      profilePic: profilePicUrl,
       isverified: false,
     });
 
@@ -34,9 +38,9 @@ exports.signup = async (req, res, next) => {
     sendLoginEmail(user.email, user.username, token);
 
     res.status(201).json({
-      message: "User created",
-      user: user,
-      token: token,
+      message: "User created successfully",
+      user,
+      token,
     });
   } catch (err) {
     if (err.code === 11000) {
@@ -157,5 +161,16 @@ exports.updatePassword = async (req, res) => {
   } catch (err) {
     console.error("Error updating password:", err);
     res.status(500).json({ message: "Something went wrong" });
+  }
+};
+//url
+exports.url = async (req, res) => {
+  try {
+    const { fileName, fileType } = req.query;
+    const urlData = await generateUploadURL(fileName, fileType);
+    res.send(urlData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Failed to generate upload URL" });
   }
 };
